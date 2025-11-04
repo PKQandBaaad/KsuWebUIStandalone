@@ -103,9 +103,9 @@ android {
 val vName = android.defaultConfig.versionName
 val vCode = android.defaultConfig.versionCode
 
-tasks.withType<PackageAndroidArtifact>().configureEach {
-    if (name.contains("package", ignoreCase = true) || name.contains("bundle", ignoreCase = true)) {
-        archiveBaseName.set("KsuWebUI-$vName-$vCode")
+tasks.configureEach {
+    if ((this as? AbstractArchiveTask) != null && (name.contains("package", ignoreCase = true) || name.contains("bundle", ignoreCase = true))) {
+        (this as AbstractArchiveTask).archiveBaseName.set("KsuWebUI-$vName-$vCode")
     }
 }
 
