@@ -51,7 +51,6 @@ android {
         targetSdk = 36
         versionCode = gitCommitCount
         versionName = "1.0"
-        setProperty("archivesBaseName", "KsuWebUI-$versionName-$versionCode")
     }
 
     buildTypes {
@@ -98,6 +97,12 @@ android {
             excludes += "**"
         }
     }
+}
+
+tasks.withType<PackageAndroidArtifact>().configureEach {
+    val vName = android.defaultConfig.versionName
+    val vCode = android.defaultConfig.versionCode
+    archiveBaseName.set("KsuWebUI-$vName-$vCode")
 }
 
 dependencies {
