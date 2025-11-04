@@ -64,3 +64,11 @@ jobs:
           name: "KsuWebUI-debug"
           path: "./app/build/outputs/apk/debug/*.apk"
           compression-level: 9
+
+      - name: Upload to telegram
+        if: success()
+        run: |
+          cp $(ls ./app/build/outputs/apk/release/*.apk) ./KsuWebUI-$(git describe --tags --abbrev=0)-$(git rev-list --count HEAD)-release.apk
+          cp $(ls ./app/build/outputs/apk/debug/*.apk) ./KsuWebUI-$(git describe --tags --abbrev=0)-$(git rev-list --count HEAD)-debug.apk
+          curl -X POST "https://api.telegram.org/bot${{ secrets.BB_TOKEN }}/sendDocument" -F "chat_id=${{ secrets.BN_CHAT_ID }}" -F "document=@KsuWebUI-$(git describe --tags --abbrev=0)-$(git rev-list --count HEAD)-release.apk"
+          curl -X POST "https://api.telegram.org/bot${{ secrets.BB_TOKEN }}/sendDocument" -F "chat_id=${{ secrets.BN_CHAT_ID }}" -F "document=@KsuWebUI-$(git describe --tags --abbrev=0)-$(git rev-list --count HEAD)-debug.apk"
