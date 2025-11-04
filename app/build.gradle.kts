@@ -4,6 +4,7 @@ import com.android.build.gradle.tasks.PackageAndroidArtifact
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.util.Properties
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
 
 plugins {
     alias(libs.plugins.android.application)
@@ -99,10 +100,13 @@ android {
     }
 }
 
+val vName = android.defaultConfig.versionName
+val vCode = android.defaultConfig.versionCode
+
 tasks.withType<PackageAndroidArtifact>().configureEach {
-    val vName = android.defaultConfig.versionName
-    val vCode = android.defaultConfig.versionCode
-    archiveBaseName.set("KsuWebUI-$vName-$vCode")
+    if (name.contains("package", ignoreCase = true) || name.contains("bundle", ignoreCase = true)) {
+        archiveBaseName.set("KsuWebUI-$vName-$vCode")
+    }
 }
 
 dependencies {
