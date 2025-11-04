@@ -18,13 +18,14 @@ val keystoreProperties = if (keystorePropertiesFile.exists() && keystoreProperti
 } else null
 
 fun String.execute(currentWorkingDir: File = file("./")): String {
-    val byteOut = ByteArrayOutputStream()
-    project.execOperations.exec {
-        workingDir = currentWorkingDir
-        commandLine = this@execute.split("\\s+".toRegex()).filter { it.isNotBlank() }
-        standardOutput = byteOut
-    }
-    return String(byteOut.toByteArray()).trim()
+    val parts = this.split("\\s+".toRegex()).filter { it.isNotBlank() }
+    val pb = ProcessBuilder(parts)
+        .directory(currentWorkingDir)
+        .redirectErrorStream(true)
+    val proc = pb.start()
+    val output = proc.inputStream.readBytes().toString(Charsets.UTF_8).trim()
+    proc.waitFor()
+    return output
 }
 
 val gitCommitCount = "git rev-list HEAD --count".execute().toInt()
