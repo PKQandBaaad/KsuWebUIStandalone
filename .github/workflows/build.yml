@@ -70,8 +70,9 @@ jobs:
         run: |
           TAG=$(git describe --tags --abbrev=0)
           COUNT=$(git rev-list --count HEAD)
-          RELEASE_APK=KsuWebUI-${TAG}-${COUNT}-release.apk
-          DEBUG_APK=KsuWebUI-${TAG}-${COUNT}-debug.apk
+          AND=KsuWebUI-${TAG}-${COUNT}
+          RELEASE_APK=${AND}-release.apk
+          DEBUG_APK=${AND}-debug.apk
           cp ./app/build/outputs/apk/release/*.apk ./"${RELEASE_APK}"
           cp ./app/build/outputs/apk/debug/*.apk ./"${DEBUG_APK}"
-          curl -s -v "https://api.telegram.org/bot${{ secrets.BB_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.BN_CHAT_ID }}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Frelease%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fdebug%22%2C%22caption%22%3A%22${TAG}-${COUNT}%22%7D%5D" -F "release=@${RELEASE_APK}" -F "debug=@${DEBUG_APK}" >> /dev/null
+          curl -s -v "https://api.telegram.org/bot${{ secrets.BB_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.BN_CHAT_ID }}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Frelease%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fdebug%22%2C%22caption%22%3A%22${AND}%22%7D%5D" -F "release=@${RELEASE_APK}" -F "debug=@${DEBUG_APK}" >> /dev/null
